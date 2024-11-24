@@ -243,7 +243,7 @@ def compare_symbols(orb, symbol1, symbols):
 
 
 # Exemple d'utilisation
-image_path = '.\\dobble\\images\\image_drn.jpg'
+image_path = '.\\dobble\\images\\image.jpg'
 original_image, morph_image = preprocess_image(image_path)
 symbols, positions = detect_and_normalize_symbols(morph_image, original_image)
 

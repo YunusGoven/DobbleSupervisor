@@ -2,6 +2,36 @@ import cv2
 import imutils
 
 import numpy as np
+def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
+    # initialize the dimensions of the image to be resized and
+    # grab the image size
+    dim = None
+    (h, w) = image.shape[:2]
+
+    # if both the width and height are None, then return the
+    # original image
+    if width is None and height is None:
+        return image
+
+    # check to see if the width is None
+    if width is None:
+        # calculate the ratio of the height and construct the
+        # dimensions
+        r = height / float(h)
+        dim = (int(w * r), height)
+
+    # otherwise, the height is None
+    else:
+        # calculate the ratio of the width and construct the
+        # dimensions
+        r = width / float(w)
+        dim = (width, int(h * r))
+
+    # resize the image
+    resized = cv2.resize(image, dim, interpolation = inter)
+
+    # return the resized image
+    return resized
 
 def preprocess_image(image_path):
     # Charger l'image
@@ -29,8 +59,8 @@ def preprocess_image(image_path):
 
     outils = cv2.subtract(gray_image, thresh_image)
 
-
-    cv2.imshow("OUTILS", outils)
+    imageshE = image_resize(outils, width= 876 ,height= 444)
+    cv2.imshow("OUTILS", imageshE)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -38,8 +68,9 @@ def preprocess_image(image_path):
     seuillageAuto = cv2.GaussianBlur(seuillageAuto, (5,5), 0)
     # seuillageAuto = cv2.medianBlur(seuillageAuto, 3)
 
+    seise = image_resize(seuillageAuto, width= 876 ,height= 444)
 
-    cv2.imshow("se", seuillageAuto)
+    cv2.imshow("se", seise)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -93,7 +124,9 @@ def detect_and_normalize_symbols(morph_image, original_image):
     # del symbols[0]
     # del symbols[8]
     print(len(symbols))
-    cv2.imshow("image", original_image)
+    ori = image_resize(original_image, width= 876 ,height= 444)
+
+    cv2.imshow("image", ori)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -145,7 +178,7 @@ def compare_symbols(orb, symbol1, symbols):
 
 
 # Exemple d'utilisation
-image_path = '.\\dobble\\images\\1.png'
+image_path = '.\\dobble\\images\\maf.jpg'
 original_image, morph_image = preprocess_image(image_path)
 symbols, positions = detect_and_normalize_symbols(morph_image, original_image)
 
